@@ -1,5 +1,6 @@
 import express from 'express';
 import router from './routers/auth.router.js';
+import cart from './routers/cart.router.js';
 import main from './mongoose/database.js';
 const app = express();
 app.use(express.json());
@@ -8,6 +9,7 @@ app.get('/' , (req , res) => {
 })
 
 app.use('/auth', router)
+app.use('/cart' ,cart)
 
 
 main().then(()=>{

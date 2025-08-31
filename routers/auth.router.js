@@ -27,12 +27,14 @@ router.post('/signin' , async(req , res)=>{
   let payload = {username : req.body.username , password : req.body.password};
   let token = jwt.sign(payload , key);
   const e = await user.findOne({username : payload.username});
+
   if(!e){
     console.log('user not exist');
     return res.json(({message : "user not exist"}));
   }
   let currentpass = payload.password;
   let originalpass = e.password;
+  console.log(originalpass , currentpass)
   if(currentpass === originalpass){
   res.set('Authorization', 'Bearer ' + token);
   return res.json({message : 'login successful', token});
