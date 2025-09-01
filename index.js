@@ -9,7 +9,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/auth', router)
-app.use('/cart3', cart)
+app.use('/cart', cart)
 
 
 main().then(() => {
