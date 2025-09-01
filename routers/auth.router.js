@@ -27,7 +27,7 @@ router.post('/signin' , async(req , res)=>{
   let payload = {username : req.body.username , password : req.body.password};
   let token = jwt.sign(payload , key);
   const e = await user.findOne({username : payload.username});
-
+  console.log(e);
   if(!e){
     console.log('user not exist');
     return res.json(({message : "user not exist"}));

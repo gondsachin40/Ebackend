@@ -4,9 +4,17 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 const url = process.env.URL;
 const schema = new Schema({
-    username: String,
-    password: Number
+  username: String,
+  password: Number,
+  address : String,
+  products: [
+    {
+      productId: String,
+      count: Number
+    }
+  ]
 });
+
 const productSchema = new mongoose.Schema({
   name: String,
   imageUrl: String,
