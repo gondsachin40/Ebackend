@@ -4,19 +4,20 @@ import cart from './routers/cart.router.js';
 import main from './mongoose/database.js';
 const app = express();
 app.use(express.json());
-app.get('/' , (req , res) => {
+app.get('/', (req, res) => {
     res.send('server is listening on port 3000')
 })
 
 app.use('/auth', router)
-app.use('/cart' ,cart)
+app.use('/cart', cart)
 
 
-main().then(()=>{
+main().then(() => {
     console.log('connected to db');
-    app.listen(3000 , ()=>{
-            console.log('my server is listening to 3000')
+    app.listen(3000, () => {
+        console.log('my server is listening to 3000')
     });
-}).catch((e)=>{
+
+}).catch((e) => {
     console.log(e);
 })

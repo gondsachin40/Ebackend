@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
-import { user} from '../mongoose/database.js';
+import { user } from '../mongoose/database.js';
 import { prod } from '../mongoose/database.js';
 import * as dotenv from 'dotenv';
 import middle from '../middleware/middle.js';
@@ -25,7 +25,7 @@ cart.get('/getall', async (req, res) => {
 cart.get('/getone', async (req, res) => {
   const id = req.query.id;
   try {
-    const product = await prod.findById(id); 
+    const product = await prod.findById(id);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -35,15 +35,16 @@ cart.get('/getone', async (req, res) => {
   }
 });
 
-cart.post('/add',async(req , res)=>{
-    // console.log(req.body);
-    let payload = {name : req.body.name , imageUrl : req.body.imageUrl , price : req.body.price , description : req.body.description};
-    const newprod = new prod({name : req.body.name , imageUrl : req.body.imageUrl , price : req.body.price , description : req.body.description});
-    await newprod.save();
-    res.send('working')
+cart.post('/add', async (req, res) => {
+  // console.log(req.body);
+  let payload = { name: req.body.name, imageUrl: req.body.imageUrl, price: req.body.price, description: req.body.description };
+  const newprod = new prod({ name: req.body.name, imageUrl: req.body.imageUrl, price: req.body.price, description: req.body.description });
+  await newprod.save();
+  res.send('working')
 })
-cart.post('/addbyid', async (req, res) => {
-  const { id, username } = req.body;
+cart.post('/addbyid', middle, async (req, res) => {
+  console.log(req.user)
+  const { id, username } = req.body
   const result = await user.updateOne(
     { username: username, 'products.productId': id },
     { $inc: { 'products.$.count': 1 } }
@@ -55,8 +56,19 @@ cart.post('/addbyid', async (req, res) => {
     );
   }
   res.json({ message: 'Product added or count increased successfully' });
-});
 
+});
+cart.patch('/updateaddress', async (req, res) => {
+  let username = req.body.username;
+  let address = req.body.address;
+  console.log(username, address)
+  try {
+    await user.updateOne({ username: username }, { $set: { address: address } });
+    res.json({ message: 'address updated' });
+  } catch (err) {
+    res.json({ message: 'error in updating address' })
+  }
+});
 cart.post('/removebyid', async (req, res) => {
   const { id, username } = req.body;
   const productIsOne = await user.findOne({
@@ -83,7 +95,7 @@ cart.post('/removebyid', async (req, res) => {
   res.json({ message: 'Product count decreased by 1' });
 });
 
-cart.post('/alluser', async(req , res)=>{
+cart.post('/alluser', async (req, res) => {
   let username = req.body.username;
   const userDoc = await user.findOne({ username: username });
   if (!userDoc) {
@@ -93,10 +105,5 @@ cart.post('/alluser', async(req , res)=>{
   res.json({ products: productsArray });
 })
 
-cart.delete('/delete' , async(req , res)=>{
-    var id = req.body.id;
-    await prod.findByIdAndDelete(id)
-    res.send('deleted')
-})
 
 export default cart;

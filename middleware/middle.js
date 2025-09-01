@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
-const secretKey = "$$"; 
+const secretKey = "$$";
 const middle = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(authHeader);
+  console.log(req);
   if (authHeader) {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, secretKey, (err, user) => {
